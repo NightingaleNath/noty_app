@@ -89,19 +89,19 @@ const updateNotePin = async (userId, noteId, isPinned) => {
 };
 
 // Create Note
-router.post("/", auth, async (req, res) => {
+router.post("/note/new", auth, async (req, res) => {
   const response = await addNote(req.user._id, req.body);
   res.status(response.status === "SUCCESS" ? 201 : 400).send(response);
 });
 
 // Get Notes
-router.get("/", auth, async (req, res) => {
+router.get("/notes", auth, async (req, res) => {
   const response = await getNotesByUser(req.user._id);
   res.status(response.status === "SUCCESS" ? 200 : 400).send(response);
 });
 
 // Get Note by ID
-router.get("/:id", auth, async (req, res) => {
+router.get("/note/:id", auth, async (req, res) => {
   const note = await Note.findOne({ _id: req.params.id, userId: req.user._id });
   if (!note)
     return res.status(404).send(NoteResponse.notFound("Note not found."));
@@ -109,13 +109,13 @@ router.get("/:id", auth, async (req, res) => {
 });
 
 // Update Note
-router.put("/:id", auth, async (req, res) => {
+router.put("/note/:id", auth, async (req, res) => {
   const response = await updateNote(req.user._id, req.params.id, req.body);
   res.status(response.status === "SUCCESS" ? 200 : 400).send(response);
 });
 
 // Pin/Unpin Note
-router.patch("/:id/pin", auth, async (req, res) => {
+router.patch("/note/:id/pin", auth, async (req, res) => {
   const response = await updateNotePin(
     req.user._id,
     req.params.id,
@@ -125,7 +125,7 @@ router.patch("/:id/pin", auth, async (req, res) => {
 });
 
 // Delete Note
-router.delete("/:id", auth, async (req, res) => {
+router.delete("/note/:id", auth, async (req, res) => {
   const response = await deleteNote(req.user._id, req.params.id);
   res.status(response.status === "SUCCESS" ? 200 : 400).send(response);
 });
